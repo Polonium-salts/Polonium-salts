@@ -26,10 +26,6 @@
 
 <br/>
 
-<!-- GitHub统计 -->
-<div align="center">
-  <img height="160px" src="https://github-readme-stats-git-masterrstaa-rickstaa.vercel.app/api?username=Dahezhiquan&show_icons=true&theme=radical&bg_color=0,000000,130F40&hide_border=true&include_all_commits=true" />
-</div>
 
 <br/>
 
