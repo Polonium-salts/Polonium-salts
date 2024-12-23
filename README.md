@@ -26,14 +26,6 @@
 
 <br/>
 
-
-<br/>
-
-<!-- 连续提交 -->
-<div align="center">
-  <img width="100%" src="https://streak-stats.demolab.com/?user=Dahezhiquan&theme=radical&hide_border=true" />
-</div>
-
 <br/>
 
 <!-- 贪吃蛇 -->
