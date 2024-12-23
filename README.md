@@ -53,12 +53,11 @@
 <br/>
 
 <!-- 技能图标 -->
-<div align="center">
-  <h2>🚀 技术栈 | Tech Stack</h2>
-  <img src="https://skillicons.dev/icons?i=python,java,ts,go,vue,react,nodejs,spring,django,docker,kubernetes,mysql&theme=dark&perline=6" />
-  <br/>
-  <img src="https://skillicons.dev/icons?i=redis,mongodb,nginx,git,github,aws,gcp,azure,vscode,idea,vim&theme=dark&perline=6" />
-</div>
+### 🍉 Tech Stack
+[![My Skills](https://skillicons.dev/icons?i=c,go,rust,python,arduino,lua,nodejs,php,react,next,vue,nuxt,angular,express,tailwindcss,redux,bootstrap,html,css,js,jquery,ts,less,scss,fastapi,django,flask,pytorch,tensorflow,opencv,qt,electron,tauri,threejs)](https://skillicons.dev)
+
+### 🔨 Tools I Use
+[![My Skills](https://skillicons.dev/icons?i=mysql,sqlite,redis,postgresql,rabbitmq,docker,kubernetes,nginx,git,npm,pnpm,yarn,vite,vitest,webpack,babel,cmake,anaconda,github,grafana,githubactions,jenkins,figma,aws,azure,gcp,cloudflare,vercel,netlify,heroku)](https://skillicons.dev)
 
 <br/>
 
