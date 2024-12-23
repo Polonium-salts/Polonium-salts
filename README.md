@@ -1,6 +1,6 @@
 <!-- 科技感头部 -->
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=Hi%20👋,%20I'm%20Dahezhiquan&fontSize=50&fontAlignY=35&desc=Full%20Stack%20Developer%20|%20AI%20Engineer&descSize=20&descAlignY=55&animation=twinkling" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&height=200&text=Waving!&fontAlign=80&fontAlignY=40&color=gradient" width="100%" />
 </div>
 
 <!-- 个人简介 -->
