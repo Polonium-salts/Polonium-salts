@@ -48,11 +48,6 @@
 
 <br/>
 
-<!-- 活动统计 -->
-<div align="center">
-  <h2>📊 贡献统计 | Contributions</h2>
-  <img width="100%" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Dahezhiquan&theme=radical" />
-</div>
 
 <br/>
 
@@ -72,12 +67,6 @@ Markdown     1 hr 30 mins    ██░░░░░░░░░░░░░░░
 </div>
 
 <br/>
-
-<!-- 名言 -->
-<div align="center">
-  <h2>📖 每日格言 | Daily Quote</h2>
-  <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical" />
-</div>
 
 <!-- 页脚 -->
 <div align="center">
