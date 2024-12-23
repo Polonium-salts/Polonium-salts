@@ -56,42 +56,6 @@
 
 <br/>
 
-<!-- 代码示例 -->
-<div align="center">
-  <h2>💻 关于我 | About Me</h2>
-  
-```typescript
-class FullStackDeveloper {
-  name: string = "Dahezhiquan";
-  title: string = "Full Stack Developer & AI Engineer";
-  location: string = "China";
-  
-  skills: {
-    languages: string[];
-    frontend: string[];
-    backend: string[];
-    database: string[];
-    devops: string[];
-    ai: string[];
-  } = {
-    languages: ["TypeScript", "Python", "Java", "Go"],
-    frontend: ["React", "Vue", "Next.js", "Tailwind"],
-    backend: ["Node.js", "Spring Boot", "Django", "FastAPI"],
-    database: ["MySQL", "MongoDB", "Redis", "PostgreSQL"],
-    devops: ["Docker", "K8s", "AWS", "GitHub Actions"],
-    ai: ["TensorFlow", "PyTorch", "Scikit-learn"]
-  };
-  
-  get currentLearning(): string[] {
-    return [
-      "Cloud Native Development",
-      "AI & Machine Learning",
-      "Microservices Architecture"
-    ];
-  }
-}
-```
-</div>
 
 <br/>
 
