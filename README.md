@@ -10,8 +10,6 @@
   </a>
 </div>
 
-## 归属组织
-[![归属组织](https://github.com/jajsfw/CerealsHub/blob/main/assets/logo-modified.png.png?raw=true)]
 
 <!-- 社交徽标 -->
 <div align="center">
