@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#f4efdf" />
+<title>Open-source Minecraft Launcher｜v0.1.6 → v0.1.7 更新发布介绍</title>
+<style>
+:root{
+  --paper:#f4efdf;--paper2:#ebe4d1;--ink:#26372f;--muted:#69746a;--green:#55775c;--green2:#8ba47a;
+  --red:#c7795b;--yellow:#d7b45c;--blue:#7896a0;--line:rgba(49,65,52,.22);--shadow:rgba(58,55,39,.14);
+  --serif:"STKaiti","KaiTi","Kaiti SC","Noto Serif CJK SC",serif;
+  --sans:"Microsoft YaHei UI","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#ddd7c7;color:var(--ink);font-family:var(--sans)}
+body{display:grid;place-items:center}
+button{font:inherit;color:inherit}
+.deck{position:relative;width:min(100vw,calc(100vh * 16 / 9));height:min(100vh,calc(100vw * 9 / 16));aspect-ratio:16/9;background:var(--paper);overflow:hidden;box-shadow:0 22px 70px rgba(33,39,31,.23);isolation:isolate}
+.deck:before{content:"";position:absolute;inset:0;z-index:20;pointer-events:none;opacity:.19;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");mix-blend-mode:multiply}
+.deck:after{content:"";position:absolute;inset:13px;border:1px solid rgba(73,82,62,.12);pointer-events:none;z-index:21}
+.slide{position:absolute;inset:0;padding:5.2% 6.3% 7.2%;opacity:0;visibility:hidden;transform:translateX(3.5%) scale(.985);transition:opacity .48s ease,transform .62s cubic-bezier(.2,.72,.2,1),visibility .48s;overflow:hidden;background:radial-gradient(ellipse at 85% 9%,rgba(218,198,142,.16),transparent 31%),linear-gradient(140deg,rgba(255,255,255,.13),transparent 52%)}
+.slide.active{opacity:1;visibility:visible;transform:translateX(0) scale(1);z-index:2}
+.slide:before{content:"";position:absolute;width:28%;height:1px;background:var(--line);right:6.2%;top:5.1%;transform:rotate(-2deg)}
+.slide:after{content:attr(data-index);position:absolute;right:6.1%;top:3.1%;font:italic 13px var(--serif);letter-spacing:.12em;color:#899184}
+.kicker{display:flex;align-items:center;gap:10px;color:var(--green);font-size:clamp(9px,.95vw,14px);font-weight:800;letter-spacing:.22em;text-transform:uppercase;margin-bottom:1.6%}
+.kicker:before{content:"";width:27px;height:2px;background:var(--red);transform:rotate(-5deg);border-radius:9px}
+h1,h2,h3,p{margin-top:0}
+h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:.015em}
+h1{font-size:clamp(40px,5.6vw,82px);line-height:1.12;margin-bottom:2.4%}
+h2{font-size:clamp(29px,3.65vw,53px);line-height:1.18;margin-bottom:2.5%}
+h3{font-size:clamp(19px,2vw,29px);line-height:1.22;margin-bottom:9px}
+p{font-size:clamp(12px,1.18vw,17px);line-height:1.72;color:#59655b;margin-bottom:0}
+.lead{font-family:var(--serif);font-size:clamp(18px,2vw,29px);line-height:1.48;color:#46574b;max-width:720px}
+.small{font-size:clamp(9px,.83vw,12px);line-height:1.6;color:#798174}
+.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(77,99,75,.28);border-radius:999px;padding:5px 11px;color:#506c54;background:rgba(255,255,255,.28);font-size:clamp(9px,.82vw,12px);font-weight:700;letter-spacing:.04em}
+.tag.red{color:#a45f49;border-color:rgba(167,97,72,.32);background:rgba(199,121,91,.08)}
+.tag.gold{color:#92732e;border-color:rgba(177,145,65,.34);background:rgba(215,180,92,.1)}
+.scribble{display:block;width:190px;height:15px;margin-top:-.2%;margin-bottom:2.5%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:3.5%;align-items:center;height:100%}
+.grid60{display:grid;grid-template-columns:1.08fr .92fr;gap:4%;align-items:center;height:100%}
+.grid40{display:grid;grid-template-columns:.9fr 1.1fr;gap:4%;align-items:center;height:100%}
+.stack{display:grid;gap:13px}
+.card{position:relative;border:1.5px solid rgba(65,81,64,.28);background:rgba(255,255,255,.43);border-radius:13px;padding:3.8% 4.3%;box-shadow:4px 5px 0 rgba(93,103,75,.08)}
+.card:after{content:"";position:absolute;inset:4px;border:1px dashed rgba(91,105,84,.13);border-radius:9px;pointer-events:none}
+.card p{font-size:clamp(11px,1.05vw,15px)}
+.card .mini{font-size:clamp(9px,.82vw,12px);color:#7b8172;margin-top:7px;line-height:1.55}
+.iconbox{width:48px;height:48px;display:grid;place-items:center;border-radius:13px;background:#e4eadb;border:1px solid rgba(70,100,71,.23);margin-bottom:12px;color:var(--green)}
+.iconbox.red{background:#f1e2d9;color:#a65f48}.iconbox.gold{background:#f1e9d2;color:#98762c}.iconbox.blue{background:#e1e9e9;color:#547783}
+.statrow{display:flex;gap:12px;margin-top:4%;flex-wrap:wrap}
+.stat{min-width:116px;padding:11px 14px;border-left:3px solid var(--green);background:rgba(255,255,255,.34)}
+.stat strong{display:block;font:700 clamp(20px,2.2vw,32px) var(--serif);color:var(--ink)}
+.stat span{font-size:clamp(9px,.78vw,11px);color:#788174;letter-spacing:.08em}
+.note-line{border-left:2px solid var(--yellow);padding-left:12px;margin-top:15px;font-size:clamp(10px,.9vw,13px);color:#73776a;line-height:1.6}
+.illustration{width:100%;height:auto;max-height:100%;display:block;overflow:visible}
+.hand{stroke:#405248;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.flow{display:flex;align-items:center;justify-content:space-between;gap:7px;margin:3% 0}
+.flowstep{flex:1;text-align:center;background:rgba(255,255,255,.47);border:1.5px solid rgba(66,86,67,.27);border-radius:10px;padding:13px 7px;min-height:88px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;position:relative}
+.flowstep b{font-size:clamp(10px,1vw,14px)}.flowstep span{font-size:clamp(8px,.75vw,11px);color:#7b8174}
+.flowarrow{font-size:21px;color:#9a9d7c;font-family:var(--serif)}
+.bullet{display:flex;align-items:flex-start;gap:10px;margin:11px 0}
+.bullet i{font-style:normal;flex:0 0 21px;width:21px;height:21px;display:grid;place-items:center;border-radius:50%;background:#dfe7d8;color:#4e6c52;font-size:11px;font-weight:800;margin-top:1px}
+.bullet div{font-size:clamp(11px,1.05vw,15px);line-height:1.55;color:#586459}
+.bullet strong{color:#314638}
+.piecebar{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:18px 0 8px}
+.piece{height:44px;border:1.5px solid #7e9577;border-radius:6px;background:#dce7d4;position:relative;transform:rotate(var(--r,0deg))}
+.piece.done{background:#86a67d;border-color:#5d7c5d}.piece.pending{background:#f0e7d4;border-color:#c5a866;border-style:dashed}
+.piece:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);top:7px;left:8px}
+.dualpath{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.pathbox{border:1.5px solid rgba(75,98,74,.27);border-radius:12px;background:rgba(255,255,255,.35);padding:15px;min-height:118px}
+.pathbox h3{font-size:clamp(14px,1.45vw,21px);margin-bottom:6px}.pathbox p{font-size:clamp(9px,.9vw,13px)}
+.pathbox.primary{border-color:#72916f;background:rgba(219,232,211,.48)}
+.market-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px}
+.market-item{border:1px solid rgba(84,100,77,.24);background:rgba(255,255,255,.45);border-radius:11px;padding:13px 8px;text-align:center}
+.market-item strong{display:block;font:700 clamp(13px,1.25vw,18px) var(--serif);margin:5px 0 2px}.market-item span{font-size:10px;color:#7d8475}
+.market-item .emoji{font-size:22px}
+.bottom-caption{position:absolute;left:6.3%;bottom:4.1%;font-size:10px;color:#899083;letter-spacing:.06em}
+.corner-mark{position:absolute;right:6.1%;bottom:3.5%;display:flex;align-items:center;gap:7px;font-size:9px;letter-spacing:.14em;color:#7b8578}
+.corner-mark svg{width:24px;height:22px}
+/* opening / closing art */
+.cover{padding-top:6.6%}
+.cover .grid60{grid-template-columns:1.08fr .92fr}
+.cover h1 em{font-style:normal;color:var(--green);position:relative;white-space:nowrap}
+.cover h1 em:after{content:"";position:absolute;left:0;right:2%;height:7px;bottom:-5px;border-bottom:4px solid var(--red);border-radius:50%;transform:rotate(-2deg)}
+.cover .lead{margin-top:3.7%;max-width:590px}
+.cover .cover-foot{display:flex;align-items:center;gap:14px;margin-top:5%}
+.cover .cover-foot .line{height:1px;width:55px;background:#aeb29a}
+.cover-art{position:relative;margin-right:-4%;}
+.cover-art .stamp{position:absolute;top:7%;right:7%;width:82px;height:82px;border:1.5px solid #bb785e;border-radius:50%;display:grid;place-items:center;color:#a66650;font:italic 14px var(--serif);transform:rotate(11deg);background:rgba(244,239,223,.45)}
+/* nav */
+.chrome{position:absolute;z-index:30;left:0;right:0;bottom:0;height:48px;display:flex;align-items:center;gap:13px;padding:0 5.7%;background:linear-gradient(0deg,rgba(235,228,209,.98),rgba(235,228,209,.76));border-top:1px solid rgba(78,91,70,.15);transition:opacity .25s}
+.progress{height:3px;background:#d3d0bf;flex:1;border-radius:9px;overflow:hidden}.progress>i{height:100%;width:0;display:block;background:var(--green);transition:width .35s ease}
+.counter{font:italic 12px var(--serif);color:#6e796c;min-width:45px;text-align:center}
+.controls{display:flex;gap:6px}
+.ctrl{border:1px solid rgba(67,83,65,.24);background:rgba(255,255,255,.42);width:29px;height:29px;border-radius:50%;display:grid;place-items:center;cursor:pointer;font-size:13px;transition:background .2s,transform .2s}
+.ctrl:hover{background:#fff;transform:translateY(-1px)}
+.keyhint{font-size:9px;color:#8a9083;white-space:nowrap}
+.notes{position:absolute;z-index:35;right:4.7%;bottom:58px;width:min(410px,44%);max-height:42%;overflow:auto;background:rgba(39,55,45,.96);color:#f4efdf;padding:18px 20px;border:1px solid rgba(255,255,255,.22);border-radius:12px;box-shadow:0 10px 35px rgba(0,0,0,.22);display:none}
+.notes.show{display:block;animation:pop .22s ease}.notes h3{font-size:17px;color:#e1d6b7;margin-bottom:8px}.notes p{font-size:12px;line-height:1.75;color:#ece7d9}
+.help{position:absolute;z-index:36;left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:min(390px,80%);padding:22px 26px;background:#f8f3e5;border:1.5px solid #83917a;border-radius:15px;box-shadow:0 20px 60px rgba(0,0,0,.2)}.help.show{display:block}.help h3{font-size:22px}.help p{font-size:12px;margin:7px 0}
+.deck.cinema .chrome{opacity:0;pointer-events:none}.deck.cinema{cursor:none}.deck.cinema:hover{cursor:default}.deck.cinema:hover .chrome{opacity:.12}
+.deck.cinema .bottom-caption,.deck.cinema .corner-mark{opacity:0}
+.autoplay .progress>i{transition:width linear}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-aspect-ratio:4/3){.slide{padding-left:5%;padding-right:5%}.grid2,.grid60,.grid40{gap:2.5%}.card{padding:3%}.chrome{height:42px}.notes{bottom:50px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck" aria-label="Open-source Minecraft Launcher v0.1.6 到 v0.1.7 更新演示稿">
+
+<!-- 01 COVER -->
+<section class="slide cover active" data-index="01 / 12">
+ <div class="grid60">
+  <div>
+   <div class="kicker">A LITTLE UPDATE STORY · RELEASE NOTES</div>
+   <div class="tag gold">版本更新介绍 · v0.1.6 → v0.1.7</div>
+   <h1 style="margin-top:6%">让每一次启动，<br><em>都更从容。</em></h1>
+   <p class="lead">从账户体系，到下载引擎；从资源检索，到联机稳定性。<br>一起看看启动器这两次更新带来的改变。</p>
+   <div class="cover-foot"><span class="tag">OPEN-SOURCE</span><span class="line"></span><span class="small">Minecraft Launcher · Release story</span></div>
+  </div>
+  <div class="cover-art">
+   <svg class="illustration" viewBox="0 0 620 500" role="img" aria-label="手绘风格草地方块、方块小屋与开放圆环">
+    <defs>
+     <pattern id="grassDots" width="17" height="17" patternUnits="userSpaceOnUse"><circle cx="3" cy="4" r="1.1" fill="#65845e" opacity=".35"/><path d="M11 11l3-2" stroke="#65845e" stroke-width="1" opacity=".35"/></pattern>
+     <filter id="soft"><feGaussianBlur stdDeviation=".5"/></filter>
+    </defs>
+    <path d="M28 365 Q112 305 204 338 T389 331 T598 355 L600 478 L25 478Z" fill="#d8dfc6" stroke="#738c70" stroke-width="2.2"/>
+    <path d="M26 394 Q118 340 207 372 T404 365 T599 391" fill="none" stroke="#9bac83" stroke-width="3" stroke-linecap="round"/>
+    <path d="M54 427 Q154 391 239 414 T430 408 T588 430" fill="none" stroke="#afbd96" stroke-width="2" stroke-dasharray="3 8"/>
+    <!-- sun & clouds -->
+    <circle cx="470" cy="92" r="43" fill="#e8c979" opacity=".7"/><path d="M470 33v-12 M470 163v-12 M411 92h-13 M542 92h-13 M429 50l-9-9 M520 143l-9-9 M512 50l9-9 M428 135l-9 9" stroke="#cda85e" stroke-width="3" stroke-linecap="round"/>
+    <path d="M65 115q7-20 28-14q10-26 37-15q20 2 22 25q23 0 23 18H62q-14-7 3-14Z" fill="#fffaf0" stroke="#809489" stroke-width="2"/>
+    <path d="M335 74q9-16 25-8q9-19 28-9q18 2 20 19q16 1 16 14H330q-11-8 5-16Z" fill="#fffaf0" stroke="#809489" stroke-width="2"/>
+    <!-- open ring logo -->
+    <path d="M298 132a137 137 0 1 1-99-42" fill="none" stroke="#c7795b" stroke-width="8" stroke-linecap="round" stroke-dasharray="690 155" transform="rotate(-28 300 245)" opacity=".76"/>
+    <path d="M185 87l18 2-7 18" fill="none" stroke="#c7795b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- floating block -->
+    <g transform="translate(194 186) rotate(-5)">
+     <path d="M0 45L103 0l111 44-105 52Z" fill="#8eae79" stroke="#405b48" stroke-width="3"/>
+     <path d="M0 45l103 51v118L0 164Z" fill="#b9845f" stroke="#405b48" stroke-width="3"/>
+     <path d="M103 96l111-52v120l-111 50Z" fill="#8d694f" stroke="#405b48" stroke-width="3"/>
+     <path d="M0 45L103 0l111 44-105 52Z" fill="url(#grassDots)"/>
+     <path d="M22 54l22-10 12 6-22 11 M70 27l17-8 12 4-18 10 M140 20l24 9-16 8-21-10" stroke="#d9e2bb" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>
+     <path d="M21 82l20 10v21l-20-10Z M61 103l18 9v19l-18-9Z M128 110l21-10v19l-21 10Z" fill="#9d7257" stroke="#6d5948" stroke-width="1.5"/>
+    </g>
+    <!-- tiny traveler -->
+    <g transform="translate(415 317) rotate(4)">
+     <path d="M0 32q10-18 29-17q20 1 24 22l-4 48-52-1Z" fill="#e7d6b4" stroke="#405248" stroke-width="2.5"/>
+     <path d="M-2 35l12-22 20-4 19 15-6 12-21-8-17 16Z" fill="#789276" stroke="#405248" stroke-width="2.5"/>
+     <rect x="9" y="-17" width="36" height="38" rx="8" fill="#dcae8a" stroke="#405248" stroke-width="2.5"/>
+     <path d="M17 -2h4 M34 -2h4 M22 9q7 6 13 0" fill="none" stroke="#405248" stroke-width="2.2" stroke-linecap="round"/>
+     <path d="M2 80l-5 21 M39 81l9 19" stroke="#405248" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <!-- grass details -->
+    <g stroke="#6d8e67" stroke-width="3" stroke-linecap="round" fill="none"><path d="M94 358q-10-19-3-30m3 30q5-17 16-21m-16 21q-2-12-14-17M535 365q-7-17-2-25m2 25q6-15 15-17m-15 17q-4-10-12-12"/></g>
+    <path d="M66 283l8-16 8 16 M535 265l7-15 8 15" fill="none" stroke="#c7795b" stroke-width="2.4" stroke-linecap="round"/>
+   </svg>
+   <div class="stamp">PLAY<br>TOGETHER</div>
+  </div>
+ </div>
+ <div class="bottom-caption">从一次登录开始，把体验打磨得更好。</div><div class="corner-mark"><span>OPEN SOURCE MINECRAFT LAUNCHER</span></div>
+</section>
+
+<!-- 02 OVERVIEW -->
+<section class="slide" data-index="02 / 12">
+ <div class="kicker">THE BIG PICTURE</div>
+ <h2>两次更新，沿着一条主线前进。</h2>
+ <p class="lead">先把账户与版本识别做好，再把下载、检索和联机体验打磨得更可靠。</p>
+ <div class="grid2" style="height:auto;margin-top:4%">
+  <div class="card" style="min-height:220px">
+   <div class="tag gold">v0.1.6 · ACCOUNT FOUNDATION</div>
+   <h3 style="margin-top:17px">账户体系与识别能力</h3>
+   <div class="bullet"><i>01</i><div><strong>LittleSkin 外置登录</strong>，加入统一账户入口</div></div>
+   <div class="bullet"><i>02</i><div>强化 Forge、NeoForge、Fabric、Quilt 的识别</div></div>
+   <div class="bullet"><i>03</i><div>补全联机房间资源扫描与安全校验</div></div>
+   <div class="statrow"><div class="stat"><strong>44</strong><span>FILES CHANGED</span></div><div class="stat"><strong>+4,151</strong><span>ADDITIONS</span></div></div>
+  </div>
+  <div class="card" style="min-height:220px;border-color:rgba(83,119,87,.45)">
+   <div class="tag">v0.1.7 · EXPERIENCE ENGINE</div>
+   <h3 style="margin-top:17px">下载引擎与体验打磨</h3>
+   <div class="bullet"><i>01</i><div>重做下载调度，加入分片与断点续传</div></div>
+   <div class="bullet"><i>02</i><div>修复系统代理导致的下载降速问题</div></div>
+   <div class="bullet"><i>03</i><div>统一资源检索，增强 P2P 健康监测</div></div>
+   <div class="statrow"><div class="stat"><strong>56</strong><span>FILES CHANGED</span></div><div class="stat"><strong>+5,147</strong><span>ADDITIONS</span></div></div>
+  </div>
+ </div>
+ <div class="bottom-caption">版本提交差异统计 · v0.1.6 / v0.1.7</div><div class="corner-mark">01 — FOUNDATION</div>
+</section>
+
+<!-- 03 LITTLE SKIN -->
+<section class="slide" data-index="03 / 12">
+ <div class="grid60">
+  <div>
+   <div class="kicker">V0.1.6 · ACCOUNT</div>
+   <h2>让外置登录，<br>也有清晰的入口。</h2>
+   <p class="lead">新增 LittleSkin 登录流程，并与 Microsoft 登录共用一套账户交互。</p>
+   <div class="stack" style="margin-top:5%">
+    <div class="card"><h3>统一登录入口</h3><p>前端使用 Provider 区分 microsoft 与 littleskin，设备码卡片负责展示授权信息和轮询状态。</p></div>
+    <div class="card"><h3>独立账户存储</h3><p>LittleSkin 账户写入独立的 <code>littleskin_account.json</code>，与微软账户数据分开管理。</p></div>
+   </div>
+  </div>
+  <div>
+   <svg class="illustration" viewBox="0 0 540 430" role="img" aria-label="浏览器设备码授权手绘示意图">
+    <path d="M40 80q-10-19 15-24l390-1q18 4 16 24l-4 245q0 15-18 17L50 340q-16-4-15-21Z" fill="#fffaf0" stroke="#526754" stroke-width="2.7"/>
+    <path d="M42 91l417-2" stroke="#9ea78f" stroke-width="2"/><circle cx="65" cy="72" r="5" fill="#cf8a6a"/><circle cx="83" cy="72" r="5" fill="#e4c16d"/><circle cx="101" cy="72" r="5" fill="#91a980"/>
+    <rect x="75" y="118" width="185" height="179" rx="12" fill="#edf0e5" stroke="#b0b9a7" stroke-width="1.7"/>
+    <rect x="95" y="141" width="146" height="13" rx="6" fill="#c8d2bf"/><rect x="95" y="165" width="119" height="8" rx="4" fill="#d9ded1"/>
+    <rect x="95" y="193" width="144" height="54" rx="8" fill="#fffaf0" stroke="#859b7b" stroke-width="1.7"/><text x="167" y="227" text-anchor="middle" font-size="24" font-family="monospace" fill="#4e6b50" letter-spacing="5">ABCD-EFGH</text>
+    <rect x="95" y="263" width="83" height="15" rx="7" fill="#91aa84"/><rect x="185" y="263" width="54" height="15" rx="7" fill="#e5d8bd"/>
+    <path d="M291 136q17-23 43 0l37 34q13 14-1 29l-73 72q-14 12-28-2l-38-38q-12-13 1-27Z" fill="#e6d8bd" stroke="#596e58" stroke-width="2.5"/>
+    <path d="M289 137l81 77M278 235l83-83" stroke="#71866f" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="335" cy="224" r="68" fill="#dce8d5" stroke="#5d795e" stroke-width="2.5"/>
+    <path d="M303 224l22 23 46-54" fill="none" stroke="#57775b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M83 368q100-28 193-7t181 0" fill="none" stroke="#c2c5ae" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M413 119l11-17 11 17 M60 382l8-13 8 13" fill="none" stroke="#c7795b" stroke-width="2.2" stroke-linecap="round"/>
+    <text x="330" y="327" font-size="14" fill="#60735f" font-family="serif">授权完成 · 返回启动器</text>
+   </svg>
+   <div class="flow" style="margin-top:-1%"><div class="flowstep"><b>启动器</b><span>申请设备码</span></div><div class="flowarrow">→</div><div class="flowstep"><b>浏览器</b><span>用户授权</span></div><div class="flowarrow">→</div><div class="flowstep"><b>游戏会话</b><span>换取凭据</span></div></div>
+  </div>
+ </div>
+ <div class="bottom-caption">LittleSkin 仅适用于配置了对应外置登录的服务器；设备授权应用需加入 LittleSkin 白名单</div><div class="corner-mark">02 — SIGN IN</div>
+</section>
+
+<!-- 04 AUTH DETAILS -->
+<section class="slide" data-index="04 / 12">
+ <div class="kicker">V0.1.6 · AUTH FLOW</div>
+ <h2>登录不只是“能进来”，<br>还要把流程理顺。</h2>
+ <div class="grid2" style="margin-top:3%;height:auto">
+  <div>
+   <div class="card" style="padding:5%">
+    <div class="iconbox"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4.5 6v5.5c0 4.5 3.1 7.6 7.5 9.5 4.4-1.9 7.5-5 7.5-9.5V6Z"/><path d="m8.5 12 2.3 2.3 4.8-5"/></svg></div>
+    <h3>凭据留在后端</h3><p>OAuth access token 只保留在后端内存，不把令牌直接发给前端。</p>
+    <div class="note-line">独立账户文件，并沿用收紧后的文件权限策略。</div>
+   </div>
+  </div>
+  <div class="stack">
+   <div class="card"><div class="tag">JVM INTEGRATION</div><h3 style="margin-top:10px">通过 authlib-injector 接入</h3><p>启动时把 Yggdrasil API 地址注入 JVM，让游戏使用对应的会话认证接口。</p></div>
+   <div class="card"><div class="tag red">ACCOUNT MODEL</div><h3 style="margin-top:10px">双 Provider 并存</h3><p>账户加载、启动会话和账户视图同步支持 Microsoft 与 LittleSkin 两类登录来源。</p></div>
+   <p class="small">实现说明：当前 ID Token 校验包含 iss / aud / exp 一致性检查，但不校验 JWT 签名；令牌中的 UUID 不直接作为可信身份使用。</p>
+  </div>
+ </div>
+ <div class="bottom-caption">账户模块：auth.rs · littleskin.rs · AccountDialog.tsx</div><div class="corner-mark">03 — ACCOUNT DESIGN</div>
+</section>
+
+<!-- 05 VERSION DETECTION -->
+<section class="slide" data-index="05 / 12">
+ <div class="kicker">V0.1.6 · DETECTION & ROOM RESOURCES</div>
+ <h2>版本识别更稳，<br>联机准备更完整。</h2>
+ <div class="grid60" style="margin-top:2%">
+  <div>
+   <p class="lead">面对不同加载器的元数据与启动参数，不再只依赖单一线索。</p>
+   <div class="stack" style="margin-top:5%">
+    <div class="card"><h3>多线索识别加载器</h3><p>结合依赖名称、启动参数和版本 ID 兜底解析 Forge / NeoForge，并完善 Fabric / Quilt 版本提取。</p></div>
+    <div class="card"><h3>房间资源扫描加固</h3><p>重写模组、数据包等资源扫描与文件 ID 关联逻辑，同时加强下载路径安全校验。</p></div>
+   </div>
+  </div>
+  <div>
+   <svg class="illustration" viewBox="0 0 550 390" role="img" aria-label="不同 Minecraft 加载器与房间资源整齐归档的手绘插画">
+    <path d="M30 320q90-42 171-15t171 0t144 2" fill="none" stroke="#9eae8e" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(55 55)">
+     <rect x="0" y="0" width="175" height="205" rx="13" fill="#e9e4d5" stroke="#6e8069" stroke-width="2.3"/>
+     <path d="M0 35h175" stroke="#9ba88e" stroke-width="2"/><circle cx="18" cy="18" r="5" fill="#c7795b"/><circle cx="35" cy="18" r="5" fill="#dfbd68"/>
+     <text x="19" y="70" font-size="13" fill="#77816e" font-family="sans-serif">LOADER PROFILE</text>
+     <g font-family="serif" font-size="19" fill="#405b47" font-weight="bold"><text x="22" y="111">Forge</text><text x="22" y="150">NeoForge</text><text x="22" y="189">Fabric</text><text x="111" y="189">Quilt</text></g>
+     <path d="M87 100h65 M87 139h65 M87 178h16 M154 178h4" stroke="#9eab94" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 5"/>
+    </g>
+    <path d="M244 164q42-40 68 0" fill="none" stroke="#c7795b" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 6"/><path d="M301 155l11 10-15 4" fill="none" stroke="#c7795b" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(320 85)">
+     <path d="M4 32l85-29 100 34-89 34Z" fill="#9ab184" stroke="#4c674e" stroke-width="2.5"/>
+     <path d="M4 32l96 39v117L4 151Z" fill="#d4b28a" stroke="#4c674e" stroke-width="2.5"/>
+     <path d="M100 71l89-34v117l-89 34Z" fill="#b58d69" stroke="#4c674e" stroke-width="2.5"/>
+     <path d="M100 71v117" stroke="#536b52" stroke-width="2"/>
+     <g fill="#e9eddd" stroke="#62775e" stroke-width="1.3"><path d="M35 65l26 10v21L35 86Z"/><path d="M35 102l26 10v21l-26-10Z"/><path d="M128 94l27-10v21l-27 10Z"/></g>
+     <path d="M44 91l9 3 M44 128l9 3 M138 102l9-3" stroke="#7d8e70" stroke-width="2"/>
+    </g>
+    <g transform="translate(365 276)"><path d="M0 30l22-24 22 24v34H0Z" fill="#e9e2cd" stroke="#5c745d" stroke-width="2.2"/><path d="M-7 30L22 0l29 30" fill="none" stroke="#c7795b" stroke-width="4" stroke-linecap="round"/><rect x="16" y="42" width="13" height="22" fill="#9cae8e"/></g>
+    <path d="M92 292l-12-20m12 20 12-20m263 20-8-16m8 16 9-14" stroke="#829676" stroke-width="2.6" stroke-linecap="round"/>
+   </svg>
+   <div class="market-grid" style="margin-top:-1%">
+    <div class="market-item"><div class="emoji">🧩</div><strong>模组清单</strong><span>扫描与关联</span></div>
+    <div class="market-item"><div class="emoji">📦</div><strong>数据包</strong><span>资源补全</span></div>
+    <div class="market-item"><div class="emoji">🛡️</div><strong>路径校验</strong><span>安全下载路径</span></div>
+   </div>
+  </div>
+ </div>
+ <div class="bottom-caption">加载器识别：minecraft.rs · 房间资源：multiplayer.rs</div><div class="corner-mark">04 — DETECTION</div>
+</section>
+
+<!-- 06 DOWNLOAD ENGINE -->
+<section class="slide" data-index="06 / 12">
+ <div class="kicker">V0.1.7 · DOWNLOAD ENGINE</div>
+ <h2>下载引擎，重新设计。</h2>
+ <p class="lead">把 PCL2 ModNet / ModLoader 的下载语义迁移到 Rust，统一调度文件、线程与下载来源。</p>
+ <div class="grid2" style="margin-top:3%;height:auto;align-items:start">
+  <div class="card" style="padding:4.5%">
+   <div class="tag">NET MANAGER</div>
+   <h3 style="margin-top:12px">由一个管理器统一协调</h3>
+   <svg viewBox="0 0 470 205" class="illustration" role="img" aria-label="下载管理器分发到文件、线程和来源">
+    <rect x="148" y="5" width="174" height="42" rx="9" fill="#dce7d4" stroke="#567657" stroke-width="2"/><text x="235" y="31" text-anchor="middle" font-size="15" fill="#405b47" font-weight="bold">NetManagerClass</text>
+    <path d="M235 47v26M66 73h338M66 73v23m112-23v23m112-23v23m112-23v23" fill="none" stroke="#7d9278" stroke-width="2.4" stroke-linecap="round"/>
+    <g font-family="sans-serif" font-size="13" text-anchor="middle"><rect x="8" y="96" width="116" height="65" rx="8" fill="#f3e6d9" stroke="#bd8a6c" stroke-width="1.7"/><text x="66" y="123" fill="#835b45" font-weight="bold">NetFile</text><text x="66" y="145" fill="#8c7a68" font-size="10">任务 / 文件</text>
+    <rect x="126" y="96" width="104" height="65" rx="8" fill="#e1e9e9" stroke="#7d9aa0" stroke-width="1.7"/><text x="178" y="123" fill="#496d76" font-weight="bold">NetThread</text><text x="178" y="145" fill="#7a8987" font-size="10">并发线程</text>
+    <rect x="240" y="96" width="104" height="65" rx="8" fill="#f1ead5" stroke="#b69c5d" stroke-width="1.7"/><text x="292" y="123" fill="#8b712e" font-weight="bold">NetSource</text><text x="292" y="145" fill="#8d846d" font-size="10">下载来源</text>
+    <rect x="354" y="96" width="108" height="65" rx="8" fill="#e3eadc" stroke="#8ba17f" stroke-width="1.7"/><text x="408" y="123" fill="#526d50" font-weight="bold">限速器</text><text x="408" y="145" fill="#7c8976" font-size="10">令牌桶</text></g>
+    <path d="M20 183h430" stroke="#c0c5b2" stroke-width="1.5" stroke-dasharray="3 7"/>
+    <text x="235" y="199" text-anchor="middle" font-size="10" fill="#818977">0.1 秒统计刷新 · 全局线程上限 · 速率控制</text>
+   </svg>
+  </div>
+  <div class="stack">
+   <div class="card"><h3>分片策略</h3><p>根据文件大小决定是否分片：256 KiB 以下不分片，1 MiB 以下不拆成多段，大文件按片段并发下载。</p></div>
+   <div class="card"><h3>自适应连接与慢链识别</h3><p>结合连接平均耗时与失败次数调整超时，并将 Range 不支持、HTTP 状态码、慢链、无数据等情况分类。</p></div>
+   <div class="card"><h3>全局下载控制</h3><p>令牌桶控制下载速率，线程上限控制并发；旧调用方仍通过 net.rs 兼容门面接入。</p></div>
+  </div>
+ </div>
+ <div class="bottom-caption">新模块：download.rs · NetManager / NetFile / NetThread / NetSource</div><div class="corner-mark">05 — DOWNLOAD CORE</div>
+</section>
+
+<!-- 07 RESUME -->
+<section class="slide" data-index="07 / 12">
+ <div class="grid60">
+  <div>
+   <div class="kicker">V0.1.7 · RESUMABLE DOWNLOAD</div>
+   <h2>下载中断，<br>不必从头再来。</h2>
+   <p class="lead">每个分片完成后都会留下进度记录。重新启动时，只补齐还没完成的部分。</p>
+   <div class="piecebar" aria-label="下载分片示意"><div class="piece done"></div><div class="piece done"></div><div class="piece done"></div><div class="piece done"></div><div class="piece done"></div><div class="piece pending"></div><div class="piece pending"></div><div class="piece pending"></div></div>
+   <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px"><span class="small">● 已完成分片</span><span class="small" style="color:#ad8a45">◇ 待补齐分片</span></div>
+   <div class="card"><h3>断点信息持久化</h3><p><code>.part.meta</code> 记录已完成分片；崩溃、关机或切换镜像源后，可恢复未完成部分。</p></div>
+  </div>
+  <div>
+   <svg class="illustration" viewBox="0 0 500 430" role="img" aria-label="打包箱与正在恢复的下载进度手绘图">
+    <path d="M35 360q84-36 172-16t171 3t91 4" fill="none" stroke="#a6b294" stroke-width="2.5"/>
+    <path d="M135 142l110-51 133 49-112 57Z" fill="#d4b78b" stroke="#596f59" stroke-width="2.8"/>
+    <path d="M135 142l131 55v139l-131-57Z" fill="#e8d9b8" stroke="#596f59" stroke-width="2.8"/>
+    <path d="M266 197l112-57v139l-112 57Z" fill="#c69e75" stroke="#596f59" stroke-width="2.8"/>
+    <path d="M245 91l20 106 20-17-13-97" fill="#f2e8d1" stroke="#596f59" stroke-width="2.2"/>
+    <path d="M168 169l65 28v19l-65-28Z" fill="#90a987" stroke="#61765b" stroke-width="1.5"/>
+    <path d="M266 226l78-40" stroke="#8e674e" stroke-width="2" stroke-dasharray="4 5"/>
+    <g transform="translate(87 48)"><circle cx="48" cy="49" r="43" fill="#e2ead9" stroke="#698568" stroke-width="2.5"/><path d="M48 20v31l20 12" stroke="#557657" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M14 7l-9 12 15 2" stroke="#c7795b" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    <g transform="translate(358 245)"><rect x="0" y="0" width="74" height="75" rx="10" fill="#edf0e3" stroke="#70876d" stroke-width="2"/><path d="M17 25l13 13 28-29" fill="none" stroke="#66865e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><text x="37" y="61" text-anchor="middle" font-size="10" fill="#69806b">RESUME</text></g>
+    <path d="M415 104q12-19 25 0m-12-24v25" stroke="#c7795b" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M60 260q-9-16-1-28m1 28q7-14 15-17" stroke="#86a078" stroke-width="3" stroke-linecap="round" fill="none"/>
+   </svg>
+   <div class="card" style="margin-top:-1%"><h3>合并校验更稳</h3><p>下载完成后执行 verify_and_commit，合并阶段提供最多 3 次重试，并采用递增退避。</p></div>
+  </div>
+ </div>
+ <div class="bottom-caption">download_file_resumable · .part.meta · verify_and_commit</div><div class="corner-mark">06 — RESUME</div>
+</section>
+
+<!-- 08 PROXY FIX -->
+<section class="slide" data-index="08 / 12">
+ <div class="kicker">V0.1.7 · NETWORK FIX</div>
+ <h2>下载先走直连，<br>需要时再回退代理。</h2>
+ <p class="lead">针对系统代理可能带来的绕行与降速，调整下载请求的网络选择策略。</p>
+ <div class="dualpath">
+  <div class="pathbox primary">
+   <div class="tag">FIRST · DIRECT</div><h3 style="margin-top:10px">优先直连下载</h3>
+   <p><code>direct_client()</code> 绕过系统 HTTP_PROXY / HTTPS_PROXY，避免下载流量被不必要地转发。</p>
+   <svg viewBox="0 0 400 95" class="illustration" style="margin-top:8px"><rect x="4" y="22" width="80" height="50" rx="8" fill="#e7eee0" stroke="#678365" stroke-width="2"/><text x="44" y="51" text-anchor="middle" font-size="12" fill="#536e54">启动器</text><path d="M85 47h215" stroke="#648363" stroke-width="4" stroke-linecap="round"/><path d="M287 36l15 11-15 11" fill="none" stroke="#648363" stroke-width="4" stroke-linecap="round"/><rect x="309" y="22" width="86" height="50" rx="8" fill="#e7eee0" stroke="#678365" stroke-width="2"/><text x="352" y="51" text-anchor="middle" font-size="12" fill="#536e54">下载源</text></svg>
+  </div>
+  <div class="pathbox">
+   <div class="tag red">FALLBACK · PROXY</div><h3 style="margin-top:10px">连接失败才回退</h3>
+   <p><code>proxy_retry_worthwhile</code> 只在连接级失败、直连确实不可达时，才考虑使用带系统代理的客户端重试。</p>
+   <svg viewBox="0 0 400 95" class="illustration" style="margin-top:8px"><rect x="4" y="22" width="80" height="50" rx="8" fill="#f2e6dc" stroke="#b27b5e" stroke-width="2"/><text x="44" y="51" text-anchor="middle" font-size="12" fill="#94634d">启动器</text><path d="M85 47h90" stroke="#b37b60" stroke-width="3" stroke-dasharray="5 6"/><path d="M165 37l12 10-12 10" fill="none" stroke="#b37b60" stroke-width="3"/><rect x="181" y="22" width="94" height="50" rx="8" fill="#f0e8d7" stroke="#c3a367" stroke-width="2"/><text x="228" y="51" text-anchor="middle" font-size="12" fill="#92753b">系统代理</text><path d="M276 47h24" stroke="#b37b60" stroke-width="3"/><path d="M291 37l12 10-12 10" fill="none" stroke="#b37b60" stroke-width="3"/><rect x="309" y="22" width="86" height="50" rx="8" fill="#f2e6dc" stroke="#b27b5e" stroke-width="2"/><text x="352" y="51" text-anchor="middle" font-size="12" fill="#94634d">下载源</text></svg>
+  </div>
+ </div>
+ <div class="note-line">更新记录指出：此前部分环境下下载速度曾降至约五分之一；新策略避免默认绕行代理，并保留连接失败后的回退能力。</div>
+ <div class="bottom-caption">net.rs · direct_client() · proxy_retry_worthwhile</div><div class="corner-mark">07 — DIRECT FIRST</div>
+</section>
+
+<!-- 09 CONTENT SEARCH -->
+<section class="slide" data-index="09 / 12">
+ <div class="grid60">
+  <div>
+   <div class="kicker">V0.1.7 · RESOURCE MARKETPLACE</div>
+   <h2>找资源，<br>不必在多个入口间切换。</h2>
+   <p class="lead">内容市场统一检索，把模组、光影、数据包等六大类资源聚合到一套搜索体验中。</p>
+   <div class="bullet"><i>01</i><div><strong>统一资源目录</strong>：分类入口与检索流程重构。</div></div>
+   <div class="bullet"><i>02</i><div><strong>搜索能力完善</strong>：新增项目、搜索和多语言检索相关模块。</div></div>
+   <div class="bullet"><i>03</i><div><strong>下载流程增强</strong>：搜索结果到资源文件的衔接更完整。</div></div>
+   <div class="tag gold" style="margin-top:3%">6 CATEGORIES · ONE SEARCH</div>
+  </div>
+  <div>
+   <svg class="illustration" viewBox="0 0 520 420" role="img" aria-label="手绘资源市场书架和搜索放大镜">
+    <path d="M50 352h419" stroke="#758b70" stroke-width="3" stroke-linecap="round"/>
+    <rect x="58" y="95" width="400" height="247" rx="15" fill="#e8e2d1" stroke="#657b63" stroke-width="2.6"/>
+    <rect x="79" y="117" width="357" height="54" rx="10" fill="#faf6e9" stroke="#9eaa91" stroke-width="1.7"/>
+    <circle cx="108" cy="144" r="10" fill="none" stroke="#70856b" stroke-width="2.6"/><path d="M116 152l8 8" stroke="#70856b" stroke-width="2.6" stroke-linecap="round"/><path d="M145 144h202" stroke="#b8c0ad" stroke-width="5" stroke-linecap="round"/><path d="M145 157h124" stroke="#d1d4c6" stroke-width="3" stroke-linecap="round"/>
+    <g transform="translate(86 193)"><rect x="0" y="0" width="94" height="113" rx="8" fill="#dce8d6" stroke="#7b9678" stroke-width="1.8"/><path d="M19 67l26-41 28 41Z" fill="#92ae83" stroke="#668566" stroke-width="1.5"/><text x="47" y="91" text-anchor="middle" font-size="13" fill="#536d52">MOD</text><text x="47" y="105" text-anchor="middle" font-size="8" fill="#82907a">项目资源</text></g>
+    <g transform="translate(196 193)"><rect x="0" y="0" width="94" height="113" rx="8" fill="#e6e9e8" stroke="#879a9c" stroke-width="1.8"/><circle cx="47" cy="48" r="25" fill="#a8c0bc" stroke="#718d86" stroke-width="1.5"/><path d="M29 49q18-30 36 0" stroke="#f4efe1" stroke-width="3" fill="none"/><text x="47" y="91" text-anchor="middle" font-size="13" fill="#54736d">SHADER</text><text x="47" y="105" text-anchor="middle" font-size="8" fill="#82908a">视觉效果</text></g>
+    <g transform="translate(306 193)"><rect x="0" y="0" width="94" height="113" rx="8" fill="#f0e5d1" stroke="#b49a66" stroke-width="1.8"/><path d="M25 36l22-18 22 18v28H25Z" fill="#d1b67d" stroke="#9c8659" stroke-width="1.4"/><path d="M25 36l22 12 22-12" fill="none" stroke="#9c8659" stroke-width="1.4"/><text x="47" y="91" text-anchor="middle" font-size="13" fill="#8c753e">DATAPACK</text><text x="47" y="105" text-anchor="middle" font-size="8" fill="#988c72">玩法内容</text></g>
+    <path d="M425 63q-20-24-45-1" fill="none" stroke="#c7795b" stroke-width="3" stroke-linecap="round"/><path d="M389 52l-11 11 16 2" fill="none" stroke="#c7795b" stroke-width="3" stroke-linecap="round"/>
+    <path d="M36 120l-9-15m9 15 12-12m429 219l-8-16m8 16 11-13" stroke="#79906e" stroke-width="2.5" stroke-linecap="round"/>
+   </svg>
+   <p class="small" style="text-align:center">模组 · 光影 · 数据包 · ……其他资源类别</p>
+  </div>
+ </div>
+ <div class="bottom-caption">resource-catalog.ts · resource-project.ts · resource-search.ts · search-i18n.ts</div><div class="corner-mark">08 — ONE SEARCH</div>
+</section>
+
+<!-- 10 P2P -->
+<section class="slide" data-index="10 / 12">
+ <div class="kicker">V0.1.7 · MULTIPLAYER HEALTH</div>
+ <h2>联机状态，看得见；<br>连接切换，更从容。</h2>
+ <div class="grid60" style="margin-top:2%">
+  <div>
+   <p class="lead">为房间连接加入心跳探活与公共中继节点发现，并增强分享码和对等凭证解析。</p>
+   <div class="stack" style="margin-top:5%">
+    <div class="card"><h3>节点心跳探活</h3><p>更及时地感知节点状态；切换中继后，房间仍可维持互通。</p></div>
+    <div class="card"><h3>冗余中继列表</h3><p>扩充备用中继选择，增强网络路径的容错能力。</p></div>
+    <div class="card"><h3>资源自动补齐</h3><p>访客可按房主版本自动补齐模组与光影，减少进房前的版本差异。</p></div>
+   </div>
+  </div>
+  <div>
+   <svg class="illustration" viewBox="0 0 540 420" role="img" aria-label="两个朋友的小屋通过心跳信号和中继点连接">
+    <path d="M24 340q95-42 184-9t170-2t139 9" fill="none" stroke="#a7b593" stroke-width="3"/>
+    <g transform="translate(25 146)"><path d="M0 60l73-62 75 62v126H0Z" fill="#e6d9bc" stroke="#526b54" stroke-width="2.7"/><path d="M-10 63L73-10l84 73" fill="none" stroke="#bf7f60" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><rect x="57" y="104" width="40" height="82" fill="#9caf8e" stroke="#526b54" stroke-width="2"/><rect x="15" y="91" width="27" height="28" fill="#d1e0dc" stroke="#526b54" stroke-width="2"/></g>
+    <g transform="translate(370 146)"><path d="M0 60l73-62 75 62v126H0Z" fill="#e6d9bc" stroke="#526b54" stroke-width="2.7"/><path d="M-10 63L73-10l84 73" fill="none" stroke="#bf7f60" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><rect x="57" y="104" width="40" height="82" fill="#9caf8e" stroke="#526b54" stroke-width="2"/><rect x="15" y="91" width="27" height="28" fill="#d1e0dc" stroke="#526b54" stroke-width="2"/></g>
+    <path d="M157 212q55-64 109 0t105 0" fill="none" stroke="#789779" stroke-width="3" stroke-dasharray="6 7"/>
+    <path d="M157 212q55-64 109 0t105 0" fill="none" stroke="#c7795b" stroke-width="1.7" stroke-dasharray="2 11"/>
+    <g transform="translate(214 91)"><circle cx="48" cy="48" r="44" fill="#e1e9db" stroke="#658365" stroke-width="2.5"/><path d="M18 49h17l9-18 14 38 11-20h19" fill="none" stroke="#608360" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="48" y="113" text-anchor="middle" font-size="11" fill="#62745e">HEARTBEAT</text></g>
+    <g transform="translate(238 255)"><circle cx="24" cy="24" r="23" fill="#f1e6cf" stroke="#b3985f" stroke-width="2"/><circle cx="24" cy="24" r="6" fill="#b3985f"/><path d="M24 0v9m0 30v9M0 24h9m30 0h9" stroke="#b3985f" stroke-width="2" stroke-linecap="round"/><text x="24" y="68" text-anchor="middle" font-size="10" fill="#91783f">RELAY</text></g>
+    <path d="M83 122l-8-14m8 14 12-10m344 11-8-15m8 15 13-10" stroke="#77906e" stroke-width="2.5" stroke-linecap="round"/>
+   </svg>
+   <div class="tag" style="margin-left:16%">P2P HEALTH STATUS · RELAY DISCOVERY</div>
+  </div>
+ </div>
+ <div class="bottom-caption">multiplayer.rs · multiplayer.ts · MultiplayerView</div><div class="corner-mark">09 — PLAY TOGETHER</div>
+</section>
+
+<!-- 11 POLISH -->
+<section class="slide" data-index="11 / 12">
+ <div class="kicker">V0.1.7 · POLISH & MIRRORS</div>
+ <h2>体验的细节，也值得认真对待。</h2>
+ <div class="grid2" style="margin-top:4%;align-items:start">
+  <div class="card" style="min-height:235px">
+   <div class="iconbox red"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4zM8 9h8M8 13h5"/><path d="M7 3v4m10-4v4"/></svg></div>
+   <h3>中文显示更完整</h3><p>补齐等宽字体与像素字体的中文回退链，解决版本号、徽标和像素标题中的中文隐形空白。</p>
+   <div class="tag" style="margin-top:13px">PingFang SC · Microsoft YaHei UI · Noto Sans CJK SC</div>
+  </div>
+  <div class="card" style="min-height:235px">
+   <div class="iconbox gold"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 18V6m0 12h16M7 14l4-4 3 3 6-7"/><path d="M16 6h4v4"/></svg></div>
+   <h3>镜像下载有兜底</h3><p>Quilt 接入 BMCLAPI 国内镜像回退；Forge / NeoForge 的客户端文件与 JSON 则采用官方源和 BMCLAPI 自动回退链。</p>
+   <div class="tag gold" style="margin-top:13px">OFFICIAL SOURCE ↔ BMCLAPI</div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:2.7%;display:flex;align-items:center;gap:18px;padding:2.5% 3.5%">
+  <div style="font:700 29px var(--serif);color:#8c6a43">Aa</div><div><strong style="font-family:var(--serif);font-size:18px">可读性与对比度同步打磨</strong><p class="small">浅色主题下状态标签颜色加深；主题主色与明暗面板亮度也作了细节调整。</p></div>
+ </div>
+ <div class="bottom-caption">styles.css · theme.ts · loaders.rs</div><div class="corner-mark">10 — FINISHING TOUCHES</div>
+</section>
+
+<!-- 12 CLOSING -->
+<section class="slide cover" data-index="12 / 12">
+ <div class="grid60">
+  <div>
+   <div class="kicker">THANK YOU · KEEP BUILDING</div>
+   <h1>每一次更新，<br><em>都向前一点。</em></h1>
+   <p class="lead">更清晰的账户流程，更可靠的下载体验，更顺畅的资源检索与联机准备。</p>
+   <div class="statrow" style="margin-top:5%">
+    <div class="stat"><strong>0.1.6</strong><span>ACCOUNT FOUNDATION</span></div>
+    <div class="stat"><strong>0.1.7</strong><span>DOWNLOAD & EXPERIENCE</span></div>
+   </div>
+   <div style="margin-top:6%"><div class="tag">OPEN SOURCE · BUILT WITH PLAYERS</div></div>
+   <p style="margin-top:18px;font-size:clamp(12px,1.1vw,16px);color:#516b54;font-weight:700"><a href="https://github.com/Cerlesse-studio/Open-source-Minecraft-launcher" target="_blank" rel="noopener">GitHub · Cerlesse-studio / Open-source-Minecraft-launcher</a></p>
+   <p class="small" style="margin-top:4px">github.com/Cerlesse-studio/Open-source-Minecraft-launcher</p>
+  </div>
+  <div class="cover-art">
+   <svg class="illustration" viewBox="0 0 600 490" role="img" aria-label="手绘方块小路通向远方的草地村庄">
+    <circle cx="430" cy="105" r="56" fill="#e8ca7b" opacity=".7"/><path d="M430 29v-16m0 184v-16m-76-76h-17m203 0h-17m-147-54-12-12m133 133-12-12" stroke="#c6a25d" stroke-width="3" stroke-linecap="round"/>
+    <path d="M20 334q105-65 214-19t203-4t142 15v146H20Z" fill="#dbe2cb" stroke="#788f71" stroke-width="2.5"/>
+    <path d="M20 390q104-50 205-9t215-2t139 12" fill="none" stroke="#a5b58f" stroke-width="3"/>
+    <!-- block path -->
+    <g stroke="#657c60" stroke-width="2.2"><path d="M235 385l53-20 58 21-55 22Z" fill="#d7c29b"/><path d="M235 385l56 23v33l-56-23Z" fill="#c4a77b"/><path d="M291 408l55-22v34l-55 21Z" fill="#b9976a"/><path d="M286 336l43-17 46 17-45 19Z" fill="#d7c29b"/><path d="M286 336l44 19v28l-44-19Z" fill="#c4a77b"/><path d="M330 355l45-19v28l-45 19Z" fill="#b9976a"/></g>
+    <!-- village -->
+    <g transform="translate(62 190)"><path d="M0 58l59-50 61 50v89H0Z" fill="#e9ddc4" stroke="#5b725a" stroke-width="2.5"/><path d="M-8 61L59 1l69 60" fill="none" stroke="#bf8061" stroke-width="7" stroke-linejoin="round"/><rect x="46" y="93" width="25" height="54" fill="#a2b18e" stroke="#5b725a" stroke-width="2"/><rect x="12" y="83" width="22" height="22" fill="#c6d8d2" stroke="#5b725a" stroke-width="2"/></g>
+    <g transform="translate(408 219)"><path d="M0 42l43-36 45 36v64H0Z" fill="#e9ddc4" stroke="#5b725a" stroke-width="2.3"/><path d="M-7 45L43 0l52 45" fill="none" stroke="#8fa47f" stroke-width="6"/><rect x="32" y="70" width="20" height="36" fill="#a2b18e" stroke="#5b725a" stroke-width="1.7"/></g>
+    <!-- trees -->
+    <g fill="#8da47c" stroke="#60785f" stroke-width="2.3"><path d="M173 245l-32 0 17-36-11-2 27-45 26 45-11 2 17 36Z"/><path d="M194 245h-39v24h39Z" fill="#aa8967"/><path d="M365 227l-31 0 15-34-10-2 26-39 25 39-10 2 16 34Z"/><path d="M384 227h-38v22h38Z" fill="#aa8967"/></g>
+    <g stroke="#6b8b65" stroke-width="2.5" stroke-linecap="round"><path d="M30 356q-9-18-1-31m1 31q9-17 18-20m-18 20q-3-12-13-16M526 354q-7-15-2-26m2 26q8-13 16-15" fill="none"/></g>
+    <!-- ring -->
+    <path d="M335 88a119 119 0 1 1-85-83" fill="none" stroke="#c7795b" stroke-width="6" stroke-linecap="round" stroke-dasharray="590 140" transform="rotate(-27 330 128)" opacity=".72"/>
+    <path d="M241 6l18 3-7 16" fill="none" stroke="#c7795b" stroke-width="5" stroke-linecap="round"/>
+    <path d="M95 125q15-18 34-6q12-22 32-7q19 2 20 20H91q-9-4 4-7Z" fill="#fffaf0" stroke="#839584" stroke-width="2"/>
+   </svg>
+  </div>
+ </div>
+ <div class="bottom-caption">感谢观看 · 欢迎 Star、Issue 与贡献</div><div class="corner-mark">SEE YOU IN THE GAME</div>
+</section>
+
+<div class="chrome" id="chrome">
+ <div class="controls">
+  <button class="ctrl" id="prev" title="上一页 ←" aria-label="上一页">‹</button>
+  <button class="ctrl" id="next" title="下一页 →" aria-label="下一页">›</button>
+ </div>
+ <div class="progress"><i id="bar"></i></div>
+ <div class="counter" id="counter">01 / 12</div>
+ <button class="ctrl" id="notesBtn" title="旁白稿 N" aria-label="旁白稿">N</button>
+ <button class="ctrl" id="autoBtn" title="自动播放 P" aria-label="自动播放">▶</button>
+ <button class="ctrl" id="cinemaBtn" title="视频录制模式 V" aria-label="视频录制模式">◉</button>
+ <button class="ctrl" id="fullBtn" title="全屏 F" aria-label="全屏">⛶</button>
+ <span class="keyhint">← → 翻页　N 旁白　V 录制　F 全屏</span>
+</div>
+<div class="notes" id="notes"><h3>视频旁白 / Presenter Notes</h3><p id="noteText"></p></div>
+<div class="help" id="help"><h3>演示控制</h3><p>← / → 或空格：上一页 / 下一页</p><p>N：显示当前页旁白稿　P：自动播放 / 暂停</p><p>V：视频录制模式　F：进入 / 退出全屏</p><p>Home / End：跳到首页 / 尾页　Esc：关闭面板或退出全屏</p><p>鼠标点击左右两侧也可翻页。演示内容适合 16:9 屏幕录制。</p></div>
+</div>
+<script>
+(()=>{
+ const deck=document.getElementById('deck');
+ const slides=[...document.querySelectorAll('.slide')];
+ const bar=document.getElementById('bar');
+ const counter=document.getElementById('counter');
+ const notes=document.getElementById('notes');
+ const noteText=document.getElementById('noteText');
+ const autoBtn=document.getElementById('autoBtn');
+ const help=document.getElementById('help');
+ const narration=[
+  '大家好，欢迎来到 Open-source Minecraft Launcher 的版本更新介绍。这次我们一起回顾 v0.1.6 和 v0.1.7。两个版本分别围绕账户体系，以及下载和联机体验展开。我们的目标很简单：让每一次启动、每一次下载、每一次和朋友进入世界，都更顺畅一些。',
+  '先看整体变化。v0.1.6 有 44 个文件发生变化，重点是 LittleSkin 外置登录、双 Provider 账户体系、加载器识别和房间资源扫描。到了 v0.1.7，更新扩展到 56 个文件，重点转向下载引擎重做、断点续传、代理降速修复、统一资源检索和 P2P 健康监测。',
+  'v0.1.6 新增了 LittleSkin 外置登录。它使用 OAuth 2.0 设备授权流程：启动器申请设备码，用户在浏览器完成授权，之后由后端继续完成令牌交换，获取 Minecraft 会话凭据。前端统一了 Microsoft 和 LittleSkin 的设备码登录交互，两个 Provider 的账户数据则分别保存。需要说明的是，LittleSkin 外置登录并不等同于 Mojang 或 Microsoft 正版授权，只适用于配置了对应外置认证服务的服务器。',
+  '账户流程的调整不仅是增加一个按钮。账户加载、启动会话和账户视图都支持两类 Provider；OAuth access token 只保留在后端，不直接交给前端。启动游戏时，通过 authlib-injector 将对应的 Yggdrasil API 接入 JVM。账户文件也采用独立存储，并沿用权限收紧策略。',
+  '除了登录，v0.1.6 还加强了底层识别能力。Forge 和 NeoForge 可以从依赖名称、启动参数和版本 ID 中综合识别，Fabric 与 Quilt 的版本提取也更完善。联机房间的资源扫描逻辑同步重写，模组、数据包等资源的关联更完整，同时加强了下载路径安全检查。',
+  'v0.1.7 最重要的变化，是重新设计下载引擎。新模块把 NetManager、NetFile、NetThread 和 NetSource 等模型统一起来，由全局管理器协调任务。下载可以根据文件大小选择是否分片（256 KiB 以下不分片、1 MiB 以下不拆成多段），也能控制线程上限和全局速率；连接超时会根据实际连接表现调整，慢链路和不同下载失败原因也会被分类处理。整体语义参考 PCL2 的 ModNet 和 ModLoader，并用 Rust 实现。',
+  '第二个重要变化是断点续传。下载过程中，每完成一个分片，就把状态写入 part.meta。即使遇到软件退出、系统关机，或者中途更换镜像源，再次下载时也可以识别已完成的分片，只补齐剩下的内容。大体积资源不再因为一次中断就全部重新下载。最后的分片合并与校验阶段也增加了重试机制。',
+  '这次还重点处理了系统代理导致的下载降速。在部分环境中，Clash、Surge 等软件设置的 HTTP_PROXY 或 HTTPS_PROXY 会让下载流量绕行，速度可能明显下降。新的策略优先使用直连客户端；只有直连发生连接级失败、确实无法访问时，才回退到带系统代理的客户端。这样既避免默认绕行，也保留了必要时的可达性。',
+  '内容市场也进行了统一检索改造。模组、光影、数据包等六大类资源进入统一搜索与分类入口，并补充了资源目录、项目、搜索和多语言检索模块。对于玩家来说，查找和定位内容不再需要在不同入口之间反复切换。',
+  '联机方面，v0.1.7 增加节点心跳探活和公共中继节点发现，并扩展备用中继列表。分享码与对等凭证的解析也得到增强，切换中继后房间仍能保持互通。访客还可以根据房主的版本自动补齐模组与光影，减少版本不一致带来的进入障碍。',
+  '最后是那些容易被忽略、却会直接影响体验的细节。中文字体回退链得到补齐，修复了部分中文在版本号和像素标题中显示为空白的问题；浅色主题的状态标签提高了对比度。加载器下载也增加镜像兜底，Quilt 接入 BMCLAPI，Forge 和 NeoForge 则采用官方源与 BMCLAPI 的回退链；当 BMCLAPI 将官方 client.jar 或版本 JSON 重定向到慢存储节点时，优先使用官方源。',
+  '从 v0.1.6 的账户体系完善，到 v0.1.7 的下载引擎与体验升级，这两次更新让启动器在身份管理、资源获取和联机准备上都向前迈了一步。项目仍在持续迭代，欢迎访问 GitHub 查看代码、提交 Issue，或参与贡献。感谢观看，我们游戏里见。'
+ ];
+ let index=0, timer=null, duration=11000;
+ function render(){
+  slides.forEach((s,i)=>s.classList.toggle('active',i===index));
+  counter.textContent=String(index+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  bar.style.width=((index+1)/slides.length*100)+'%';
+  noteText.textContent=narration[index];
+  if(timer) restartTimer();
+ }
+ function go(n){index=Math.max(0,Math.min(slides.length-1,n));render()}
+ function next(){if(index<slides.length-1)go(index+1);else stopAuto()}
+ function prev(){go(index-1)}
+ function stopAuto(){if(timer){clearInterval(timer);timer=null}deck.classList.remove('autoplay');autoBtn.textContent='▶';}
+ function restartTimer(){if(timer)clearInterval(timer);bar.style.transition='none';bar.style.width=((index)/slides.length*100)+'%';requestAnimationFrame(()=>{bar.style.transition='width '+(duration/1000)+'s linear';bar.style.width=((index+1)/slides.length*100)+'%'});timer=setInterval(()=>{if(index<slides.length-1){index++;render()}else stopAuto()},duration)}
+ function toggleAuto(){if(timer){stopAuto()}else{deck.classList.add('autoplay');autoBtn.textContent='Ⅱ';restartTimer()}}
+ function toggleNotes(){notes.classList.toggle('show')}
+ function toggleCinema(){deck.classList.toggle('cinema')}
+ async function fullscreen(){try{if(!document.fullscreenElement)await deck.requestFullscreen();else await document.exitFullscreen()}catch(e){}}
+ document.getElementById('prev').addEventListener('click',prev);
+ document.getElementById('next').addEventListener('click',next);
+ document.getElementById('notesBtn').addEventListener('click',toggleNotes);
+ document.getElementById('autoBtn').addEventListener('click',toggleAuto);
+ document.getElementById('cinemaBtn').addEventListener('click',toggleCinema);
+ document.getElementById('fullBtn').addEventListener('click',fullscreen);
+ document.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+  else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);
+  else if(e.key.toLowerCase()==='n')toggleNotes();else if(e.key.toLowerCase()==='p')toggleAuto();
+  else if(e.key.toLowerCase()==='v')toggleCinema();else if(e.key.toLowerCase()==='f')fullscreen();
+  else if(e.key==='?'||e.key==='/')help.classList.toggle('show');
+  else if(e.key==='Escape'){notes.classList.remove('show');help.classList.remove('show')}
+ });
+ let x0=null;
+ deck.addEventListener('touchstart',e=>{x0=e.changedTouches[0].clientX},{passive:true});
+ deck.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45){dx<0?next():prev()}x0=null},{passive:true});
+ deck.addEventListener('click',e=>{if(e.target.closest('button,.notes,.help'))return;const r=deck.getBoundingClientRect();const x=e.clientX-r.left;if(x<r.width*.12)prev();else if(x>r.width*.88)next()});
+ render();
+})();
+</script>
+</body>
+</html>
